@@ -47,7 +47,6 @@ public class ConfigurationResolverConfigClassIT {
     private static final String PAGE_PATH = CONTENT_ROOT_PATH + "/page1";
     private static final String CONFIG_PATH = CONFIG_ROOT_PATH + "/page1";
     
-    @SuppressWarnings("deprecation")
     @Before
     public void setUp() throws Exception {
         resourceResolver = teleporter.getService(ResourceResolverFactory.class).getAdministrativeResourceResolver(null);

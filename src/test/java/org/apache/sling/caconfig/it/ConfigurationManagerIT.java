@@ -64,7 +64,6 @@ public class ConfigurationManagerIT {
     
     private Resource resourcePage1;
     
-    @SuppressWarnings("deprecation")
     @Before
     public void setUp() throws Exception {
         resourceResolver = teleporter.getService(ResourceResolverFactory.class).getAdministrativeResourceResolver(null);

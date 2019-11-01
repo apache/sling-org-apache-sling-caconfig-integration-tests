@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.apache.sling</groupId>
         <artifactId>sling</artifactId>
-        <version>33</version>
+        <version>35</version>
         <relativePath/>
     </parent>
 
@@ -248,7 +248,7 @@
                 <launchpad.keep.running>true</launchpad.keep.running>
                 <launchpad.debug>true</launchpad.debug>
                 <http.port>8080</http.port>
-            </properties>            
+            </properties>
         </profile>
     </profiles>
     

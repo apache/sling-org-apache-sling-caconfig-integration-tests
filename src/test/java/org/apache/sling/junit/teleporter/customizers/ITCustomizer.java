@@ -16,25 +16,42 @@
  */
 package org.apache.sling.junit.teleporter.customizers;
 
+import java.net.URI;
+import java.util.concurrent.TimeoutException;
+
+import org.apache.sling.caconfig.impl.ConfigurationBuilderAdapterFactory;
 import org.apache.sling.junit.rules.TeleporterRule;
+import org.apache.sling.testing.clients.ClientException;
+import org.apache.sling.testing.clients.osgi.OsgiConsoleClient;
 import org.apache.sling.testing.teleporter.client.ClientSideTeleporter;
+import org.apache.sling.testing.tools.sling.SlingTestBase;
 import org.apache.sling.testing.tools.sling.TimeoutsProvider;
 
 public class ITCustomizer implements TeleporterRule.Customizer {
 
-    public static final String BASE_URL_PROP = "launchpad.http.server.url";
+    private final static SlingTestBase S = new SlingTestBase();
+
+    private static final Class[] EXPECTED_COMPONENTS = new Class[] {
+            ConfigurationBuilderAdapterFactory.class
+    };
 
     @Override
     public void customize(TeleporterRule t, String options) {
         final ClientSideTeleporter cst = (ClientSideTeleporter)t;
-        cst.setBaseUrl(System.getProperty(BASE_URL_PROP, BASE_URL_PROP + "_IS_NOT_SET"));
-        cst.setServerCredentials("admin", "admin");
+        cst.setBaseUrl(S.getServerBaseUrl());
+        cst.setServerCredentials(S.getServerUsername(), S.getServerPassword());
+        cst.setTestReadyTimeoutSeconds(TimeoutsProvider.getInstance().getTimeout(5));
         cst.includeDependencyPrefix("org.apache.sling.caconfig.it");
-        cst.setTestReadyTimeoutSeconds(TimeoutsProvider.getInstance().getTimeout(10));
-        
-        // list all configuration annotation classes here (separated by ",")
-        cst.getAdditionalBundleHeaders().put("Sling-ContextAware-Configuration-Classes",
-                "org.apache.sling.caconfig.it.example.SimpleConfig");
+
+        // additionally check for the registration of mandatory sling models components
+        try {
+            OsgiConsoleClient osgiClient = new OsgiConsoleClient(URI.create(S.getServerBaseUrl()), S.getServerUsername(), S.getServerPassword());
+            for (Class clazz : EXPECTED_COMPONENTS) {
+                osgiClient.waitComponentRegistered(clazz.getName(), 20000, 200);
+            }
+        } catch (ClientException | TimeoutException | InterruptedException ex) {
+            throw new RuntimeException("Error waiting for expected components.", ex);
+        }
     }
 
 }

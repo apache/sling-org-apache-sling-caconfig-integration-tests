@@ -49,37 +49,37 @@ import org.junit.Rule;
 import org.junit.Test;
 
 public class ConfigurationManagerIT {
-    
+
     @Rule
     public TeleporterRule teleporter = TeleporterRule.forClass(getClass(), "IT");
-    
+
     private ResourceResolver resourceResolver;
     private ResourceBuilder resourceBuilder;
     private ConfigurationManager configManager;
     private ConfigurationResolver configResolver;
-    
+
     private static final String PAGE_PATH = CONTENT_ROOT_PATH + "/page1";
     private static final String CONFIG_PATH = CONFIG_ROOT_PATH + "/page1";
     private static final String CONFIG_NAME = SimpleConfig.class.getName();
-    
+
     private Resource resourcePage1;
-    
+
     @Before
     public void setUp() throws Exception {
-        resourceResolver = teleporter.getService(ResourceResolverFactory.class).getAdministrativeResourceResolver(null);
+        resourceResolver = teleporter.getService(ResourceResolverFactory.class).getServiceResourceResolver(null);
         resourceBuilder = teleporter.getService(ResourceBuilderFactory.class).forResolver(resourceResolver);
         configManager = teleporter.getService(ConfigurationManager.class);
         configResolver = teleporter.getService(ConfigurationResolver.class);
-        
+
         resourcePage1 = resourceBuilder.resource(PAGE_PATH, "sling:configRef", CONFIG_PATH).getCurrentParent();
     }
-    
+
     @After
     public void tearDown() {
         cleanUp(resourceResolver);
         resourceResolver.close();
     }
-    
+
     @Test
     public void testNonExistingConfig() throws Exception {
         ConfigurationData config = configManager.getConfiguration(resourcePage1, CONFIG_NAME);
@@ -91,24 +91,24 @@ public class ConfigurationManagerIT {
         assertEquals(0, (int)props.get("intParam", 0));
         assertEquals(false, props.get("boolParam", false));
     }
-    
+
     @Test
     public void testExistingConfig() throws Exception {
         resourceBuilder.resource(CONFIG_PATH + "/sling:configs/" + CONFIG_NAME,
                 "stringParam", "value1",
                 "intParam", 123,
                 "boolParam", true);
-        
+
         ConfigurationData config = configManager.getConfiguration(resourcePage1, CONFIG_NAME);
         assertNotNull(config);
-        
+
         ValueMap props = config.getEffectiveValues();
         assertEquals("value1", props.get("stringParam", String.class));
         assertEquals("defValue", props.get("stringParamDefault", String.class));
         assertEquals(123, (int)props.get("intParam", 0));
         assertEquals(true, props.get("boolParam", false));
     }
-    
+
     @Test
     public void testWriteConfig() throws Exception {
         // write configuration data via configuration manager
@@ -119,17 +119,17 @@ public class ConfigurationManagerIT {
         values.put("boolParam", true);
         configManager.persistConfiguration(resourcePage1, CONFIG_NAME, new ConfigurationPersistData(values));
         resourceResolver.commit();
-        
+
         // read config via configuration resolver
         SimpleConfig config = configResolver.get(resourcePage1).as(SimpleConfig.class);
         assertNotNull(config);
-        
+
         assertEquals("valueA", config.stringParam());
         assertEquals("valueB", config.stringParamDefault());
-        assertEquals(55, (int)config.intParam());
+        assertEquals(55, config.intParam());
         assertEquals(true, config.boolParam());
     }
-    
+
     @Test
     public void testWriteConfigCollection() throws Exception {
         // write configuration data via configuration manager
@@ -144,19 +144,19 @@ public class ConfigurationManagerIT {
         items.add(new ConfigurationPersistData(values2).collectionItemName("item2"));
         configManager.persistConfigurationCollection(resourcePage1, CONFIG_NAME, new ConfigurationCollectionPersistData(items));
         resourceResolver.commit();
-        
+
         // read config via configuration resolver
         Collection<SimpleConfig> config = configResolver.get(resourcePage1).asCollection(SimpleConfig.class);
         assertEquals(2, config.size());
-        
+
         Iterator<SimpleConfig> configIterator = config.iterator();
         SimpleConfig config1 = configIterator.next();
         SimpleConfig config2 = configIterator.next();
-        
+
         assertEquals("valueA", config1.stringParam());
         assertEquals("valueB", config1.stringParamDefault());
-        assertEquals(55, (int)config2.intParam());
+        assertEquals(55, config2.intParam());
         assertEquals(true, config2.boolParam());
     }
-    
+
 }

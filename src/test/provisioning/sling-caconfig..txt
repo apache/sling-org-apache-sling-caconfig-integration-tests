@@ -16,19 +16,14 @@
 #  specific language governing permissions and limitations
 #  under the License.
 #
-[feature name=integration-tests]
+#
+[feature name=sling-caconfig]
 
 [artifacts]
-  org.apache.sling/org.apache.sling.launchpad//slingfeature/slingfeature
+    org.apache.sling/org.apache.sling.caconfig.api
+    org.apache.sling/org.apache.sling.caconfig.spi
+    org.apache.sling/org.apache.sling.caconfig.impl
 
-[artifacts startLevel=15]
-  org.apache.sling/org.apache.sling.junit.core
-  org.apache.sling/org.apache.sling.testing.tools
-  org.apache.sling/org.apache.sling.resourcebuilder
-  org.apache.sling/org.apache.sling.caconfig.api
-  org.apache.sling/org.apache.sling.caconfig.spi
-  org.apache.sling/org.apache.sling.caconfig.impl
-    
 [configurations]
   org.apache.sling.commons.log.LogManager.factory.config-slingconfig.log
     org.apache.sling.commons.log.names=["org.apache.sling.caconfig"]
@@ -39,10 +34,6 @@
     user.mapping=[
       "org.apache.sling.caconfig.impl\=sling-caconfig"
     ]
-
-  org.apache.sling.jcr.base.internal.LoginAdminWhitelist.fragment-junitcore
-    whitelist.name="junitcore"
-    whitelist.bundles=["org.apache.sling.junit.core"]
 
 [:repoinit]
     create service user sling-caconfig

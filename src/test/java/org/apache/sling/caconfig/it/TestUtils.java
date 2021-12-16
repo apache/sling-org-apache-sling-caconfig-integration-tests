@@ -25,23 +25,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 final class TestUtils {
-    
+
     /**
      * Root path for test content
      */
     public static final String CONTENT_ROOT_PATH = "/content/test";
-    
+
     /**
      * Root path for config content
      */
     public static final String CONFIG_ROOT_PATH = "/conf/test";
-    
+
     private static final Logger log = LoggerFactory.getLogger(TestUtils.class);
-    
+
     private TestUtils() {
         // static methods only
     }
-    
+
     public static void cleanUp(ResourceResolver resourceResolver) {
         deletePath(resourceResolver, CONTENT_ROOT_PATH);
         deletePath(resourceResolver, CONFIG_ROOT_PATH);

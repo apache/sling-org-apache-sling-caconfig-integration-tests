@@ -27,17 +27,17 @@ import org.junit.Rule;
 import org.junit.Test;
 
 public class ConfigurationMetadataProviderIT {
-    
+
     @Rule
     public TeleporterRule teleporter = TeleporterRule.forClass(getClass(), "IT");
-    
+
     @Test
     public void testConfigurationMetadata() {
         ConfigurationMetadataProvider underTest = teleporter.getService(ConfigurationMetadataProvider.class);
-        
+
         ConfigurationMetadata configMetadata = underTest.getConfigurationMetadata(SimpleConfig.class.getName());
         assertNotNull(configMetadata);
         assertEquals(SimpleConfig.class.getName(), configMetadata.getName());
     }
-    
+
 }

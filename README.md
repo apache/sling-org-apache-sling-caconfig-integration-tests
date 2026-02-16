@@ -4,4 +4,4 @@
 
 This module is **obsolete**.
 
-For reference or potential bugfix releases use branch [maintenance](https://github.com/apache/sling-org-apache-sling-nosql-generic/tree/maintenance).
+For reference or potential bugfix releases use branch [maintenance](https://github.com/apache/sling-org-apache-sling-caconfig-integration-tests/tree/maintenance).

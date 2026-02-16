@@ -1,3 +1,0 @@
-Sling-Test-Regexp: .*Test
-
--plugin.slingcaconfig: org.apache.sling.caconfig.bndplugin.ConfigurationClassScannerPlugin

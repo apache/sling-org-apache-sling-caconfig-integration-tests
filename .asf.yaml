@@ -1,4 +1,10 @@
 github:
+  description: "Apache Sling Context-Aware Configuration Integration Tests (deprecated)"
+  homepage: "https://sling.apache.org/"
+  labels:
+  - "sling"
+  - "java"
+  - "deprecated"
   autolink_jira:
   - "SLING"
   - "OAK"
